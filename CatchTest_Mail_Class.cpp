@@ -23,3 +23,31 @@ TEST_CASE( "Mail class checker", "[Mail.connect]" ) {
     REQUIRE( mail.connect("", "password") == false );
     REQUIRE( mail.connect("///", "true") == false );
 }
+
+TEST_CASE( "MailSend class checker", "[MailSend.send]" ) {
+    MailSend mail;
+    REQUIRE( mail.send("login", "", 0) == false );
+    REQUIRE( mail.send("login@gmail.com", "qwerty", 11222) == true );
+    REQUIRE( mail.send("login@gmail.com", "qwerty", 0) == false );
+    REQUIRE( mail.send("ProjectHR@yandex.ru", "super", 444) == true );
+    REQUIRE( mail.send("", "", ) == false );
+    REQUIRE( mail.send("pavel@mail.ru", "", 940) == false );
+    REQUIRE( mail.send("", "password", -666) == false );
+    REQUIRE( mail.send("///", "true", 4) == false );
+}
+
+TEST_CASE( "MailSend class checker", "[MailSend.connect_to_smtp]" ) {
+    MailSend mail;
+    REQUIRE( mail.connect_to_smtp("login", "", 0) == false );
+    REQUIRE( mail.connect_to_smtp("login@gmail.com", "qwerty", 11222) == true );
+    REQUIRE( mail.connect_to_smtp("login@gmail.com", "qwerty", 0) == false );
+    REQUIRE( mail.connect_to_smtp("ProjectHR@yandex.ru", "super", 444) == true );
+    REQUIRE( mail.connect_to_smtp("", "", ) == false );
+    REQUIRE( mail.connect_to_smtp("pavel@mail.ru", "", 940) == false );
+    REQUIRE( mail.connect_to_smtp("", "password", -666) == false );
+    REQUIRE( mail.connect_to_smtp("///", "true", 4) == false );
+}
+
+int main() {
+    return 0;
+}
