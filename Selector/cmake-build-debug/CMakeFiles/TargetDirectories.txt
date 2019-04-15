@@ -1,0 +1,3 @@
+/home/mishok/CLion/AutoHR/Selector/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/mishok/CLion/AutoHR/Selector/cmake-build-debug/CMakeFiles/ProjectC__.dir
+/home/mishok/CLion/AutoHR/Selector/cmake-build-debug/CMakeFiles/edit_cache.dir
