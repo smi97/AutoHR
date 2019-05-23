@@ -31,10 +31,10 @@ public:
     static parser& instanse();
     ~parser() = default;
     void attach(Observer *_obs);
-    friend void parsing(std::ifstream &stream, std::vector<std::string> criterias, parser *p);
+    friend void parsing(std::ifstream &stream,const std::vector<std::string> &criterias, parser *p);
     int parse();
     int worker(const char* file_name);
-    void updateSkills(std::vector<std::string> criterias);
+    void updateSkills(const std::vector<std::string> &criterias);
     user get_user();
     void notify();
     void on();
@@ -43,7 +43,7 @@ public:
 
 };
 
-void parsing(std::ifstream &stream, std::vector<std::string> criterias, parser *p);
+void parsing(std::ifstream &stream,const std::vector<std::string> &criterias, parser *p);
 
 class Observer
 {

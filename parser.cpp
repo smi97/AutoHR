@@ -1,7 +1,7 @@
 #include "parser.h"
 
 //функция для парсинга в потоке
-void parsing(std::ifstream &stream, std::vector<std::string> criterias, parser *p) {
+void parsing(std::ifstream &stream, const std::vector<std::string> &criterias, parser *p) {
     if (!stream.is_open())
         return;
     user usr;
@@ -15,7 +15,6 @@ void parsing(std::ifstream &stream, std::vector<std::string> criterias, parser *
                    boost::regex reg(criterias[i]);
                    if (boost::regex_search(buf, match, reg)) {
                        usr.AddSkill(i);
-                       criterias[i] = match[0];
                    }
                }
                if (boost::regex_search(buf, match, reg_number)) usr.AddNumber(match[0]);
@@ -105,7 +104,7 @@ user parser::get_user() {
     return Users.top();
 }
 
-void parser::updateSkills(std::vector<std::string> criterias) {
+void parser::updateSkills(const std::vector<std::string> &criterias) {
     criteria = criterias;
 }
 
