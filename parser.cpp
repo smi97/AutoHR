@@ -99,34 +99,8 @@ void parser::notify()  {
         iter->update();
 }
 
-void parser::print_file(const char* file_name) {
-    std::ofstream out(file_name);
-    out << "Firstname: " << User.FName() << std::endl << "Secondname: " << User.SName() << std::endl;
-    for (size_t i = 0; i < SKILLS_COUNT; i++) {
-        if (User[i])
-            out << criteria[i] << " - OK" << std::endl;
-    }
-    out << "Phone: " << User.Phone() << std::endl;
-
-    out << std::endl<< std::ctime(User.GiveDate()) << std::endl;
-
-    out.close();
-}
-
-void parser::print() {
-    std::cout << "Firstname: " << User.FName() << std::endl << "Secondname: " << User.SName() << std::endl;
-    for (size_t i = 0; i < SKILLS_COUNT; i++) {
-        if (User[i])
-            std::cout << criteria[i] << " - OK" << std::endl;
-    }
-    std::cout << "Phone: " << User.Phone() << std::endl;
-    std::cout << std::endl << std::ctime(User.GiveDate()) << std::endl;
-}
-
 user parser::get_user() {
-    user tmp = Users.top();
-    Users.pop();
-    return tmp;
+    return Users.top();
 }
 
 void parser::updateSkills(std::vector<std::string> criterias) {

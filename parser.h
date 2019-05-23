@@ -35,8 +35,6 @@ public:
     friend void parsing(std::ifstream &stream, std::vector<std::string> criterias, parser *p);
     int parse();
     int worker(const char* file_name);
-    void print_file(const char* file_name);
-    void print();
     void updateSkills(std::vector<std::string> criterias);
     user get_user();
     void notify();
