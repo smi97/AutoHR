@@ -11,15 +11,11 @@ TEST_CASE("Checking Parser functions", "[parser]") {
         REQUIRE(check.parse() == 0);
         REQUIRE(check.get_user().flag == true);
         REQUIRE(check.worker("text") == 0);
+        user check2 = check.get_user();
+        REQUIRE(!check2.FName().empty());
+        REQUIRE(!check2.SName().empty());
+        REQUIRE(!check2.Phone().empty());
 
     }
 }
-TEST_CASE("Checking user functions", "[user]") {
-    SECTION("User check") {
-        user check;
-        REQUIRE(!check.FName().empty());
-        REQUIRE(!check.SName().empty());
-        REQUIRE(check.Phone().empty());
-        //REQUIRE((check.GiveDate()));
-    }
-}
+
