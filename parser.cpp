@@ -63,6 +63,7 @@ int parser::parse() {
     std::ifstream stream(FileName);
     if (!stream.is_open())
         return 1;
+    user usr;
     boost::regex reg_n(".*(N|n)ame.? (.*)\\.");
     std::string buf;
     boost::regex reg_number("\\x2B{0,1}[0-9]\\x28{0,1}[0-9]{3}\\x29{0,1}[0-9]{3}\\x2D{0,1}[0-9]{2}\\x2D{0,1}[0-9]{2}");
@@ -72,20 +73,21 @@ int parser::parse() {
                for (size_t i = 0; i < criteria.size(); i++) {
                    boost::regex reg(criteria[i]);
                    if (boost::regex_search(buf, match, reg)) {
-                       User.AddSkill(i);
+                       usr.AddSkill(i);
                        criteria[i] = match[0];
                    }
                }
-               if (boost::regex_search(buf, match, reg_number)) User.AddNumber(match[0]);
+               if (boost::regex_search(buf, match, reg_number)) usr.AddNumber(match[0]);
                if (boost::regex_search(buf, match, reg_n)) {
-                   if (!User.flag) {
-                       User.AddFName(match[2]);
-                       User.flag = true;
+                   if (!usr.flag) {
+                       usr.AddFName(match[2]);
+                       usr.flag = true;
                    }
-                   else User.AddSName(match[2]);
+                   else usr.AddSName(match[2]);
                }
            }
        }
+    Users.push(usr);
     stream.close();
     return 0;
 }

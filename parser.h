@@ -21,7 +21,6 @@ void AddUserToBD(user usr);
 class parser
 {
 private:
-    user User;
     std::stack<user> Users;
     std::vector<std::string> criteria;
     std::vector<Observer*> obs;
