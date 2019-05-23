@@ -5,8 +5,11 @@
 #ifndef PROJECTC_VACANCY_HPP
 #define PROJECTC_VACANCY_HPP
 
+#include "Skill.hpp"
+
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using std::vector;
 using std::string;
@@ -15,8 +18,9 @@ class Vacancy {
 public:
     Vacancy();
     Vacancy(int , string , vector<int> );
+    Vacancy AddVacancy();
     int getID();
-    vector<int> getRequirements();
+    vector<int> info();
     string getJob();
     ~Vacancy();
 private:

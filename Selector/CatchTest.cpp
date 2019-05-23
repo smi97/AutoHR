@@ -4,10 +4,12 @@
 
 TEST_CASE( "User class" , "[User]") {
     vector<int> A = {1,2,3};
-    User user("CEC","cec@ya.ru",A);
+    time_t date;
+    User user("CEC","","+7985555223",date,"cec@ya.ru",A);
     REQUIRE(user.getEmail() == "cec@ya.ru");
+    REQUIRE(user.getNumber() == "+7985555223");
     REQUIRE(user.getFIO() == "CEC");
-    REQUIRE(user.getSkills() == A);
+    REQUIRE(user.info() == A);
 }
 
 TEST_CASE("Vacancy class", "[Vacancy]"){
@@ -15,19 +17,19 @@ TEST_CASE("Vacancy class", "[Vacancy]"){
     Vacancy vacancy(1,"CAC",A);
     REQUIRE(vacancy.getID() == 1);
     REQUIRE(vacancy.getJob() == "CAC");
-    REQUIRE(vacancy.getRequirements() == A);
+    REQUIRE(vacancy.info() == A);
 }
 
 
 TEST_CASE("Candidate class" , "[Candidate]"){
     vector<int> A = {1,2,3};
-    User user2("CEC","cec@ya.ru",A);
+    time_t date ;
+    User user2("CEC","Panic","+7985555223",date,"cec@ya.ru",A);
     vector<int> B = {1,2};
     Vacancy vacancy2(1,"CAC",B);
     vector<Vacancy> vac;
     vac.push_back(vacancy2);
     vector<int> test = {1};
-    Candidate candidate(user2,vac);
-    REQUIRE(candidate.getFIO() == "CEC");
-    REQUIRE(candidate.getVacansies() == test);
+    Candidate candidate1 = Candidate::instance();
+    REQUIRE(candidate1.getFIO() == "");
 }

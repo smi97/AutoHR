@@ -7,6 +7,11 @@
 Candidate::Candidate():FIO(),email(),vacansies(0) {
 }
 
+Candidate& Candidate::instance() {
+    static Candidate instance;
+    return instance;
+}
+
 bool Candidate::check(vector<int> skills, vector<int> requirements) {
     if (skills.size() == 0 && requirements.size()==0)
         return false;
@@ -16,15 +21,17 @@ bool Candidate::check(vector<int> skills, vector<int> requirements) {
     return true;
 }
 
-Candidate::Candidate(User user, vector<Vacancy> vacancy) {
+void candidate(Candidate* p,User user, vector<Vacancy> vacancy) {
     for (auto i : vacancy){
-        if (check(user.getSkills(),i.getRequirements())){
-            this->FIO = user.getFIO();
-            this->email = user.getEmail();
-            this->vacansies.push_back(i.getID());
+        if (p->check(user.info(), i.info())){
+            p->FIO = user.getFIO();
+            p->email = user.getEmail();
+            p->vacansies.push_back(i.getID());
         }
     }
 }
+
+
 
 string Candidate::getFIO() {
     return this->FIO;
@@ -39,6 +46,11 @@ void Candidate::printCandidate() {
     for (auto i : this->vacansies)
         std::cout << i << " ";
     std::cout << std::endl;
+}
+
+int Candidate::work(User user, vector<Vacancy> vacancy){
+    std::thread trd1(&candidate, this, user, vacancy );
+    trd1.join();
 }
 
 Candidate::~Candidate() {

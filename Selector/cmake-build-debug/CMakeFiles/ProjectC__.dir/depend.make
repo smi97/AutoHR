@@ -4,6 +4,9 @@
 CMakeFiles/ProjectC__.dir/CatchTest.cpp.o: ../Candidate.cpp
 CMakeFiles/ProjectC__.dir/CatchTest.cpp.o: ../Candidate.hpp
 CMakeFiles/ProjectC__.dir/CatchTest.cpp.o: ../CatchTest.cpp
+CMakeFiles/ProjectC__.dir/CatchTest.cpp.o: ../Skill.hpp
+CMakeFiles/ProjectC__.dir/CatchTest.cpp.o: ../User.cpp
+CMakeFiles/ProjectC__.dir/CatchTest.cpp.o: ../User.hpp
 CMakeFiles/ProjectC__.dir/CatchTest.cpp.o: ../Vacancy.cpp
 CMakeFiles/ProjectC__.dir/CatchTest.cpp.o: ../Vacancy.hpp
 CMakeFiles/ProjectC__.dir/CatchTest.cpp.o: ../catch.hpp

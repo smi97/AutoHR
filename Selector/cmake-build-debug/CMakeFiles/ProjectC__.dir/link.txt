@@ -1,1 +1,1 @@
-/usr/bin/c++  -g   CMakeFiles/ProjectC__.dir/CatchTest.cpp.o  -o ProjectC__ 
+/usr/bin/c++  -pthread -g   CMakeFiles/ProjectC__.dir/CatchTest.cpp.o  -o ProjectC__ 
