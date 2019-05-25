@@ -1,10 +1,7 @@
 //
 // Created by Maxim on 2019-04-08.
 //
-#include "DBController.cpp"
-#define CATCH_CONFIG_MAIN
 
-#include "catch.hpp"
 
 
 TEST_CASE("Checking HRDB Functions", "[HRDataBaseController]" ) {
