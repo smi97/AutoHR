@@ -1,12 +1,36 @@
 language: cpp
+dist: trusty
+sudo: false
+os: linux
+
+matrix:
+  include:
+    - env: COMPILER=g++-6 BUILD=Debug STANDARD=14
+      compiler: gcc
+      addons:
+        apt:
+          update: true
+          sources:
+            - sourceline: 'ppa:mhier/libboost-latest'
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
+            - boost1.67
+    - env: COMPILER=g++-6 BUILD=Release STANDARD=14
+      compiler: gcc
+      addons:
+        apt:
+          update: true
+          sources:
+            - sourceline: 'ppa:mhier/libboost-latest'
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
+            - boost1.67
 
 compiler:
   - gcc
   - clang
-
-before_install:
-  - sudo add-apt-repository ppa:apokluda/boost1.53 --yes
-  - sudo apt-get update
 
 before_script:
   - mkdir build
