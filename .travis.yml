@@ -16,7 +16,7 @@ matrix:
           packages:
             - g++-6
             - boost1.67
-            - libpqxx
+            - libpq
     - env: COMPILER=g++-6 BUILD=Release STANDARD=14
       compiler: gcc
       addons:
@@ -28,11 +28,7 @@ matrix:
           packages:
             - g++-6
             - boost1.67
-            - libpqxx
-
-compiler:
-  - gcc
-  - clang
+            - libpq
 
 before_script:
   - mkdir build
