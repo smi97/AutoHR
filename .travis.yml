@@ -4,6 +4,10 @@ compiler:
   - gcc
   - clang
 
+before_install:
+  - sudo add-apt-repository ppa:apokluda/boost1.53 --yes
+  - sudo apt-get update
+
 before_script:
   - mkdir build
   - cd build
