@@ -5,7 +5,6 @@
 #ifndef PROJECTC_USER_HPP
 #define PROJECTC_USER_HPP
 
-#include "Skill.hpp"
 
 #include <iostream>
 #include <vector>
@@ -31,7 +30,7 @@ public:
     string getFIO();
     string getNumber();
     std::time_t* getDate();
-    ~User();
+    ~User() = default;
 private:
     string FName;
     string SName;

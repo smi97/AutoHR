@@ -50,5 +50,3 @@ void User::AddEmail(string mail) {
     Email = mail;
 }
 
-User::~User() {
-}

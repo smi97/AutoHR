@@ -19,6 +19,8 @@ thread
 -
 algorithm
 -
+queue
+-
 
 /home/mishok/CLion/AutoHR/Selector/CatchTest.cpp
 catch.hpp
@@ -26,23 +28,11 @@ catch.hpp
 main.cpp
 /home/mishok/CLion/AutoHR/Selector/main.cpp
 
-/home/mishok/CLion/AutoHR/Selector/Skill.hpp
-vector
--
-cassert
--
-Vacancy.hpp
-/home/mishok/CLion/AutoHR/Selector/Vacancy.hpp
-User.hpp
-/home/mishok/CLion/AutoHR/Selector/User.hpp
-
 /home/mishok/CLion/AutoHR/Selector/User.cpp
 User.hpp
 /home/mishok/CLion/AutoHR/Selector/User.hpp
 
 /home/mishok/CLion/AutoHR/Selector/User.hpp
-Skill.hpp
-/home/mishok/CLion/AutoHR/Selector/Skill.hpp
 iostream
 -
 vector
@@ -57,8 +47,6 @@ Vacancy.hpp
 /home/mishok/CLion/AutoHR/Selector/Vacancy.hpp
 
 /home/mishok/CLion/AutoHR/Selector/Vacancy.hpp
-Skill.hpp
-/home/mishok/CLion/AutoHR/Selector/Skill.hpp
 iostream
 -
 vector

@@ -10,6 +10,12 @@ vector<string> GETSKILLS(){
     return skills;
 }
 
+void AddSkillsToBD (vector<string> skills){
+
+}
+
+
+
 Vacancy::Vacancy() : ID(0), job(), requirements() {
 }
 
@@ -50,7 +56,6 @@ Vacancy Vacancy::AddVacancy() {
         }
         std::cin >> command;
     }
-}
-
-Vacancy::~Vacancy() {
+    if (!new_skills.empty())
+        AddSkillsToBD(new_skills);
 }

@@ -5,7 +5,6 @@
 #ifndef PROJECTC_VACANCY_HPP
 #define PROJECTC_VACANCY_HPP
 
-#include "Skill.hpp"
 
 #include <iostream>
 #include <vector>
@@ -13,6 +12,7 @@
 
 using std::vector;
 using std::string;
+
 
 class Vacancy {
 public:
@@ -22,7 +22,7 @@ public:
     int getID();
     vector<int> info();
     string getJob();
-    ~Vacancy();
+    ~Vacancy() = default;
 private:
     int ID;
     string job;

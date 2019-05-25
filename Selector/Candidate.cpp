@@ -31,10 +31,12 @@ void candidate(Candidate* p,User user, vector<Vacancy> vacancy) {
     }
 }
 
-
-
 string Candidate::getFIO() {
     return this->FIO;
+}
+
+string Candidate::getEmail() {
+    return this->email;
 }
 
 vector<int> Candidate::getVacansies() {
@@ -53,5 +55,45 @@ int Candidate::work(User user, vector<Vacancy> vacancy){
     trd1.join();
 }
 
-Candidate::~Candidate() {
+Candidate_Memento Candidate::SaveCandidate() {
+    return  Candidate_Memento(FIO, email, vacansies);
+}
+
+void Candidate::RestoreCandidate(Candidate_Memento candidate_memento) {
+    this->FIO = candidate_memento.FIO;
+    this->email = candidate_memento.Email;
+    this->vacansies = candidate_memento.Vacansies;
+}
+
+void History::Push(Candidate_Memento candidate_memento) {
+    history.Push(candidate_memento);
+}
+
+Candidate_Memento History::Pop() {
+    return history.Pop();
+}
+
+void Candidate::attach(Observer * obs) {
+    obser.push_back(obs);
+}
+
+void Candidate::notify() {
+    for (auto &i : obser)
+        i->update();
+}
+
+Observer::Observer(Candidate *mod) {
+    subject = mod;
+    subject->attach(this);
+}
+
+Candidate* Observer::getSabject() {
+    return subject;
+}
+
+JobObserver::JobObserver(Candidate * mod) : Observer(mod){}
+
+void JobObserver::update() {
+    string job = getSabject()->getEmail();
+    AddMailToBD(job);
 }
