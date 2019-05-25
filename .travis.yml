@@ -11,3 +11,5 @@ addons:
     packages:
       - cmake-data
       - cmake
+
+script:	./configure && make && make test
