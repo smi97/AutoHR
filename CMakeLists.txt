@@ -8,7 +8,7 @@ add_executable(AutoHR main.cpp
         sourceCode/DataBase/DataBase.cpp
         sourceCode/DataBase/DataBaseController.cpp
         sourceCode/DataBase/HRDataBaseController.cpp
-        sourceCode/Mail/Mail_Class.cpp
+        sourceCode/Mail/Mail_Recv.cpp
         sourceCode/Mail/Mail_Send.cpp
         sourceCode/Parser/parser.cpp
         sourceCode/Selector/Candidate.cpp
@@ -21,8 +21,9 @@ include_directories("/usr/local/include/")
 target_link_libraries(AutoHR "/usr/lib/libpq.dylib")
 add_library(libpqxx SHARED IMPORTED)
 
+
+
 find_package( Boost REQUIRED COMPONENTS program_options regex )
 include_directories( ${Boost_INCLUDE_DIRS} )
 
-# Alternatively you could use ${Boost_LIBRARIES} here.
 target_link_libraries( AutoHR ${Boost_PROGRAM_OPTIONS_LIBRARY} ${Boost_REGEX_LIBRARY} )

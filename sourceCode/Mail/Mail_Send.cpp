@@ -1,108 +1,155 @@
-#include <curl/curl.h>
-#include <iostream>
-#include <string.h>
-#include <string>
-#include <queue>
+#include "Mail_Send.h"
 
-using namespace std;
+Mail_Send::Mail_Send() :
+        m_eOperationType(SMTP_SEND_STRING)
+{}
 
-//Порты SMTP
-//Порт 25 – порт без шифрования
-//Порт 465 – порт SSL/TLS, также известный как SMTPS
-#define SERVER_PORT_SEND 465
+const bool Mail_Send::SendString(const std::string& strFrom, const std::string& strTo,
+                                   const std::string& strCc, const std::string& strMail)
+{
+    m_strFrom = strFrom;
+    m_strTo = strTo;
+    m_strCc = strCc;
+    m_strMail = strMail;
+    m_eOperationType = SMTP_SEND_STRING;
 
-class MailSend {
-public:
-    MailSend (std::string mServer, unsigned int mPort, std::string mUser, std::string mPassword)
-    : Server(mServer), Port(mPort), User(mUser), Password(mPassword), curl(), recipients(NULL)
-    {}
-
-    ~MailSend () { // Закрытие соединения
-        curl_slist_free_all(recipients);
-        curl_easy_cleanup(curl);
-    }
-
-    bool Send (std::string From,std::string To,std::string Subject,std::string Message) {
-        CURLcode res;
-
-        if ( connect() ) {
-            queue<string> msg = init_message(To, From, Subject, Message); // create message
-
-            curl_easy_setopt(curl, CURLOPT_MAIL_FROM, From.c_str() );
-            recipients = curl_slist_append(recipients, To.c_str() );
-            curl_easy_setopt(curl, CURLOPT_MAIL_RCPT, recipients);
-
-            curl_easy_setopt(curl, CURLOPT_READFUNCTION, payload_source);
-            curl_easy_setopt(curl, CURLOPT_READDATA, &msg );
-
-            curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
-
-            res = curl_easy_perform(curl);
-            if (res != CURLE_OK) {
-                fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res) );
-                return false;
-            }
-            return true;
-        }
-        return false;
-    }
-private:
-    bool connect() {
-        struct curl_slist *recipients = NULL;
-
-        curl = curl_easy_init();
-        if ( curl ) {
-            curl_easy_setopt(curl, CURLOPT_URL, Server + ":" + Port);
-            curl_easy_setopt(curl, CURLOPT_USERNAME, User);
-            curl_easy_setopt(curl, CURLOPT_PASSWORD, Password);
-            return true;
-        }
-        return false;
-    }
-
-    queue <string> init_message(string to, string from, string subj, string message) {
-        queue <string> msg;
-        string s = "To: " + to + "\n";
-        msg.push(s);
-        s = "From: " + from + "\n";
-        msg.push(s);
-        s = "Subject: " + subj + "\n";
-        msg.push(s);
-        s = "\n";
-        msg.push(s);
-        msg.push(message);
-        return msg;
-    }
-
-    static size_t payload_source(void *ptr, size_t size, size_t nmemb, void *userp) {
-
-        queue <string> *msg = (queue <string> *) userp;
-        string s;
-        if (msg->empty()) {
-            return 0;
-        }
-        else {
-            s = msg->front();
-            msg->pop();
-        }
-
-        memcpy(ptr, s.c_str(), s.size());
-        return s.size();
-    }
-
-    //variables
-    std::string Server;
-    unsigned int Port;
-    std::string User;
-    std::string Password;
-    CURL *curl;
-    struct curl_slist *recipients;
-};
-
-int main() {
-    MailSend mailc("smtp://smtp.gmail.com", SERVER_PORT_SEND, "imaf4550@gmail.com", "zxc123fgh789al");
-    mailc.Send("imaf4550@gmail.com", "ledkakonf@gmail.com", "subject", "Hello from C++ SMTP Client!");
-
-    return 0;
+    return Perform();
 }
 
+const bool Mail_Send::SendFile(const std::string& strFrom, const std::string& strTo,
+                                 const std::string& strCc, const std::string& strPath)
+{
+    m_strFrom = strFrom;
+    m_strTo = strTo;
+    m_strCc = strCc;
+    m_strLocalFile = strPath;
+    m_eOperationType = SMTP_SEND_FILE;
+
+    return Perform();
+}
+
+const bool Mail_Send::VerifyAddress(const std::string& strAddress)
+{
+    m_strTo = strAddress;
+    m_eOperationType = SMTP_VRFY;
+
+    return Perform();
+}
+
+const bool Mail_Send::ExpandMailList(const std::string& strListName)
+{
+    m_strMail = strListName;
+    m_eOperationType = SMTP_EXPN;
+
+    return Perform();
+}
+
+void Mail_Send::ParseURL(std::string& strURL)
+{
+    std::string strTmp = strURL;
+    std::transform(strTmp.begin(), strTmp.end(), strTmp.begin(), ::toupper);
+
+    if (strTmp.compare(0, 8, "SMTPS://") == 0 || strTmp.compare(0, 7, "SMTP://") == 0)
+    {
+        if (m_eSslTlsFlags != SslTlsFlag::ENABLE_SSL)
+            m_eSslTlsFlags = SslTlsFlag::ENABLE_SSL;
+    }
+    else if (m_eSslTlsFlags == SslTlsFlag::ENABLE_SSL)
+    {
+        strURL.insert(0, "smtps://");
+    }
+    else
+        strURL.insert(0, "smtp://");
+}
+
+const bool Mail_Send::PrePerform()
+{
+    m_ssString.clear();
+
+    switch (m_eOperationType)
+    {
+        case SMTP_SEND_STRING:
+            if (!m_strFrom.empty() && !m_strTo.empty())
+            {
+                m_ssString.str(m_strMail);
+                curl_easy_setopt(m_pCurlSession, CURLOPT_MAIL_FROM, m_strFrom.c_str());
+
+                m_pRecipientslist = curl_slist_append(m_pRecipientslist, m_strTo.c_str());
+
+                if (!m_strCc.empty())
+                    m_pRecipientslist = curl_slist_append(m_pRecipientslist, m_strCc.c_str());
+
+                curl_easy_setopt(m_pCurlSession, CURLOPT_MAIL_RCPT, m_pRecipientslist);
+
+                curl_easy_setopt(m_pCurlSession, CURLOPT_READFUNCTION, ReadLineFromStringStreamCallback);
+                curl_easy_setopt(m_pCurlSession, CURLOPT_READDATA, &m_ssString);
+                curl_easy_setopt(m_pCurlSession, CURLOPT_UPLOAD, 1L);
+            }
+            else
+                return false;
+            break;
+
+        case SMTP_SEND_FILE:
+            if (!m_strLocalFile.empty() && !m_strFrom.empty() && !m_strTo.empty())
+            {
+                m_fLocalFile.open(m_strLocalFile, std::fstream::in);
+
+                if (m_fLocalFile)
+                {
+                    m_fLocalFile.seekg(0);
+
+                    curl_easy_setopt(m_pCurlSession, CURLOPT_READFUNCTION, CMailClient::ReadLineFromFileStreamCallback);
+                    curl_easy_setopt(m_pCurlSession, CURLOPT_READDATA, &m_fLocalFile);
+                    curl_easy_setopt(m_pCurlSession, CURLOPT_UPLOAD, 1L);
+                }
+                curl_easy_setopt(m_pCurlSession, CURLOPT_MAIL_FROM, m_strFrom.c_str());
+                m_pRecipientslist = curl_slist_append(m_pRecipientslist, m_strTo.c_str());
+
+                if (!m_strCc.empty())
+                    m_pRecipientslist = curl_slist_append(m_pRecipientslist, m_strCc.c_str());
+
+                curl_easy_setopt(m_pCurlSession, CURLOPT_MAIL_RCPT, m_pRecipientslist);
+            }
+            else
+                return false;
+
+            break;
+
+        case SMTP_VRFY:
+            if (!m_strTo.empty())
+            {
+                if (m_strTo.at(0) != '<')
+                    m_strTo.insert(0, "<");
+
+                if (m_strTo.at(m_strTo.length() - 1) != '>')
+                    m_strTo += '>';
+
+                m_pRecipientslist = curl_slist_append(m_pRecipientslist, m_strTo.c_str());
+                curl_easy_setopt(m_pCurlSession, CURLOPT_MAIL_RCPT, m_pRecipientslist);
+            }
+            else
+                return false;
+
+            break;
+
+        case SMTP_EXPN:
+            m_pRecipientslist = curl_slist_append(m_pRecipientslist, m_strMail.c_str());
+            curl_easy_setopt(m_pCurlSession, CURLOPT_MAIL_RCPT, m_pRecipientslist);
+            curl_easy_setopt(m_pCurlSession, CURLOPT_CUSTOMREQUEST, "EXPN");
+            break;
+
+    }
+
+    curl_easy_setopt(m_pCurlSession, CURLOPT_URL, m_strURL.c_str());
+
+    return true;
+}
+
+const bool Mail_Send::PostPerform(CURLcode ePerformCode)
+{
+    if (m_eOperationType == SMTP_SEND_FILE)
+        if (m_fLocalFile.is_open())
+            m_fLocalFile.close();
+
+    return true;
+}
