@@ -3,6 +3,9 @@ dist: xenial
 sudo: false
 os: linux
 
+before_install:
+  - sudo apt-get update
+
 matrix:
   include:
     - env: COMPILER=g++-6 BUILD=Debug STANDARD=14
