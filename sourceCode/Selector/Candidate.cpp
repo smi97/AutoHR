@@ -4,21 +4,24 @@
 
 #include "Candidate.hpp"
 
-Candidate::Candidate():FIO(),email(),vacansies(0) {
+Candidate::Candidate():FIO(),email(),vacansies() {
 }
 
-bool Candidate::check(vector<int> skills, vector<int> requirements) {
-    if (skills.size() == 0 && requirements.size()==0)
+bool Candidate::check(const vector<int> & skills,const vector<int> & requirements) {
+    if (skills.size() == 0 && requirements.size()==0){
         return false;
-    for (auto i : requirements)
-        if ( std::find(skills.begin(), skills.end(),i) == skills.end())
+    }
+    for (auto & i : requirements) {
+        if (std::find(skills.begin(), skills.end(), i) == skills.end()){
             return false;
+        }
+    }
     return true;
 }
 
-Candidate::Candidate(User user, vector<Vacancy> vacancy) {
-    for (auto i : vacancy){
-        if (check(user.getSkills(),i.getRequirements())){
+Candidate::Candidate(const User & user, const vector<Vacancy> & vacancy) {
+    for (auto & i : vacancy){
+        if (check(user.info(), i.info())){
             this->FIO = user.getFIO();
             this->email = user.getEmail();
             this->vacansies.push_back(i.getID());
@@ -26,20 +29,65 @@ Candidate::Candidate(User user, vector<Vacancy> vacancy) {
     }
 }
 
-string Candidate::getFIO() {
+string Candidate::getFIO() const {
     return this->FIO;
 }
 
-vector<int> Candidate::getVacansies() {
+string Candidate::getEmail() const {
+    return this->email;
+}
+
+vector<int> Candidate::getVacansies() const {
     return this->vacansies;
 }
 
 void Candidate::printCandidate() {
     std::cout << this->FIO << " " << this->email << " ";
-    for (auto i : this->vacansies)
+    for (auto i : this->vacansies) {
         std::cout << i << " ";
+    }
     std::cout << std::endl;
 }
 
-Candidate::~Candidate() {
+CandidateMemento Candidate::SaveCandidate() {
+    return  CandidateMemento(FIO, email, vacansies);
+}
+
+void Candidate::RestoreCandidate(CandidateMemento candidate_memento) {
+    this->FIO = candidate_memento.FIO;
+    this->email = candidate_memento.Email;
+    this->vacansies = candidate_memento.Vacansies;
+}
+
+void History::Push( const CandidateMemento & candidate_memento) {
+    history.Push(candidate_memento);
+}
+
+CandidateMemento History::Pop() {
+    return history.Pop();
+}
+
+void Candidate::attach(Observer * obs) {
+    obser.push_back(obs);
+}
+
+void Candidate::notify() {
+    for (auto &i : obser)
+        i->update();
+}
+
+Observer::Observer(Candidate *mod) {
+    subject = mod;
+    subject->attach(this);
+}
+
+Candidate* Observer::getSabject() {
+    return subject;
+}
+
+JobObserver::JobObserver(Candidate * mod) : Observer(mod){}
+
+void JobObserver::update() {
+    string job = getSabject()->getEmail();
+    //AddMailToBD(job);
 }
