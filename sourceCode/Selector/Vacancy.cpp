@@ -4,24 +4,29 @@
 
 #include "Vacancy.hpp"
 
-Vacancy::Vacancy() : ID(0), job(), requirements() {
+
+vector<string> GETSKILLS(){
+    vector<string> skills;
+    return skills;
 }
 
-Vacancy::Vacancy(int id, string job_, vector<int> req) : ID(id), job(job_), requirements(req) {
-
+void AddSkillsToBD (vector<string> skills){
 }
 
-int Vacancy::getID() {
+Vacancy::Vacancy() : ID(), job(), requirements() {
+}
+
+Vacancy::Vacancy(const int & id, const string & job_, const vector<int> & req) : ID(id), job(job_), requirements(req) {
+}
+
+int Vacancy::getID() const {
     return this->ID;
 }
 
-string Vacancy::getJob() {
+string Vacancy::getJob() const {
     return this->job;
 }
 
-vector<int> Vacancy::getRequirements()  {
+vector<int> Vacancy::info() const {
     return this->requirements;
-}
-
-Vacancy::~Vacancy() {
 }
